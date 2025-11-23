@@ -783,3 +783,99 @@ footer {
         flex-direction: column;
     }
 }
+/* =========================================
+   VERSIÓN MÓVIL (RESPONSIVE DESIGN)
+   Pega esto al final de tu archivo css/css.css
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    /* 1. ENCABEZADO (HEADER) */
+    header {
+        flex-direction: column; /* Pone el logo arriba y el menú abajo */
+        padding: 15px 10px;
+        position: relative; /* Quitamos el sticky si molesta, o lo dejamos */
+    }
+
+    .logo {
+        width: 140px; /* Logo un poco más chico */
+        margin-bottom: 15px;
+    }
+
+    nav ul {
+        flex-wrap: wrap; /* Permite que los botones bajen si no caben */
+        justify-content: center; /* Centra los botones */
+        gap: 10px;
+    }
+
+    nav a {
+        font-size: 12px; /* Letra más pequeña para que entren */
+        padding: 8px 12px; /* Botones más compactos */
+    }
+
+    /* Ocultar botones de usuario (Login) en el header para ahorrar espacio
+       y moverlos al menú hamburguesa si fuera necesario, 
+       o simplemente hacerlos más chicos: */
+    #user-area {
+        margin-top: 15px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* 2. SECCIÓN HERO (PORTADA) */
+    .hero {
+        height: auto; /* Altura automática, no forzada */
+        min-height: 60vh; /* Mínimo el 60% de la pantalla */
+        padding: 60px 20px;
+    }
+
+    .hero-texto {
+        width: 100%; /* Ocupa todo el ancho */
+        padding: 25px;
+    }
+
+    .hero-texto h2 {
+        font-size: 1.8rem; /* Título más pequeño */
+    }
+
+    /* 3. CONTENEDORES Y TARJETAS */
+    .contenedor {
+        width: 95%; /* Aprovechar más el ancho del celular */
+        padding: 20px; /* Menos relleno */
+        margin: 30px auto;
+    }
+
+    .grid-destacados, 
+    .grid-especialidades, 
+    .grid-sedes,
+    .bienvenida {
+        grid-template-columns: 1fr; /* ¡IMPORTANTE! Todo en 1 sola columna */
+        gap: 25px;
+    }
+
+    /* 4. FORMULARIOS Y MODALES */
+    .popup-contenido {
+        width: 95%; /* Modal ocupa casi toda la pantalla */
+        padding: 20px;
+        max-height: 90vh; /* Que no se salga de la pantalla verticalmente */
+    }
+
+    /* Ajuste para que los inputs del registro (nombre/apellido) se pongan uno abajo del otro */
+    #modal-register .popup-contenido div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* 5. SECCIÓN BIENVENIDA (TEXTO E IMAGEN) */
+    .bienvenida {
+        display: flex;
+        flex-direction: column-reverse; /* Pone la imagen arriba y texto abajo si quieres, o normal */
+    }
+    
+    .imagen-bienvenida img {
+        margin-top: 20px;
+    }
+    
+    /* 6. AJUSTES DE TEXTO */
+    h2 { font-size: 1.5rem; }
+    p, li { font-size: 0.95rem; }
+}
