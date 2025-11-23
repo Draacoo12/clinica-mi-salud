@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Administración - Panel</title>
+  <link rel="stylesheet" href="css/Css.css">
+</head>
+<body>
+  <header>
+      <h1 style="margin:0; font-size: 24px;">Panel de Administración</h1>
+      <div style="display:flex; align-items:center; gap:15px;">
+        <span id="admin-user-label" style="font-weight:bold;">Admin</span>
+        <button id="btn-logout-admin" class="btn" style="background:rgba(255,255,255,0.2); border:1px solid white;">Cerrar sesión</button>
+      </div>
+  </header>
+
+  <main class="admin-wrap">
+    <div class="admin-header">
+      <div class="admin-nav">
+        <button data-section="dashboard" class="btn btn-secondary">Dashboard</button>
+        <button data-section="citas" class="btn btn-secondary">Citas Médicas</button>
+        <button data-section="especialidades" class="btn btn-secondary">Especialidades</button>
+        <button data-section="doctores" class="btn btn-secondary">Doctores</button>
+        <button data-section="contacto" class="btn btn-secondary">Contacto</button>
+      </div>
+    </div>
+
+    <div class="admin-sections">
+      <section id="section-dashboard">
+        <h2>Resumen</h2>
+        <p id="resumen-info">Bienvenido al panel de control.</p>
+      </section>
+
+      <section id="section-citas" class="hidden">
+        <h2>Historial de Citas Médicas</h2>
+        <div class="contenedor-tabla" style="overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background:#0099cc; color:white; text-align:left;">
+                        <th style="padding:12px;">DNI</th>
+                        <th style="padding:12px;">Paciente</th>
+                        <th style="padding:12px;">Teléfono</th>
+                        <th style="padding:12px;">Sede</th>
+                        <th style="padding:12px;">Especialidad</th>
+                        <th style="padding:12px;">Doctor</th>
+                        <th style="padding:12px;">Fecha/Hora</th>
+                        <th style="padding:12px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-citas-body">
+                    </tbody>
+            </table>
+            <p id="mensaje-sin-citas" style="text-align:center; padding:20px; display:none;">No hay citas registradas.</p>
+        </div>
+      </section>
+
+      <section id="section-especialidades" class="hidden">
+        <h2>Gestión de Especialidades</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Agregar Especialidad</h3>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input id="esp-nombre" />
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <input id="esp-desc" />
+            </div>
+            <div class="form-group">
+              <label>Imagen</label>
+              <input type="file" id="esp-img" accept="image/*" />
+            </div>
+            <div class="form-group center">
+              <button id="btn-add-esp" class="btn btn-primary">Guardar</button>
+            </div>
+          </div>
+          <div>
+            <h3>Listado</h3>
+            <div id="especialidades-list">Cargando...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-doctores" class="hidden">
+        <h2>Gestión de Doctores</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Agregar Doctor</h3>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input id="doc-nombre" />
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input id="doc-apellido" />
+            </div>
+            <div class="form-group">
+              <label>Especialidad</label>
+              <select id="doc-especialidad"></select>
+            </div>
+            <div class="form-group">
+              <label>Fotografía</label>
+              <input type="file" id="doc-img" accept="image/*" />
+            </div>
+            <div class="form-group center">
+              <button id="btn-add-doc" class="btn btn-primary">Guardar Doctor</button>
+            </div>
+          </div>
+          <div>
+            <h3>Listado</h3>
+            <div id="doctores-list">Cargando...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-contacto" class="hidden">
+        <h2>Información de Contacto</h2>
+        <div class="form-group"><label>Dirección</label><input id="con-direccion" /></div>
+        <div class="form-group"><label>Teléfono</label><input id="con-telefono" /></div>
+        <div class="form-group"><label>Correo</label><input id="con-correo" /></div>
+        <div class="form-group center">
+          <button id="btn-save-contacto" class="btn btn-primary">Actualizar</button>
+        </div>
+      </section>
+    </div>
+  </main>
+    
+    <script src="js/dataloader.js"></script>
+    <script src="js/admin.js"></script>
+    
+    <script>
+        /* SCRIPT EXTRA PARA LA TABLA DE CITAS Y NAVEGACIÓN */
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Lógica de Navegación entre pestañas
+            const botonesNav = document.querySelectorAll('.admin-nav button');
+            const secciones = document.querySelectorAll('.admin-sections section');
+
+            botonesNav.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const seccionId = 'section-' + btn.getAttribute('data-section');
+                    
+                    // Ocultar todas
+                    secciones.forEach(s => s.classList.add('hidden'));
+                    
+                    // Mostrar la seleccionada
+                    const seccionActiva = document.getElementById(seccionId);
+                    if(seccionActiva) {
+                        seccionActiva.classList.remove('hidden');
+                        
+                        // Si entramos a citas, recargar la tabla
+                        if(seccionId === 'section-citas') {
+                            cargarTablaCitas();
+                        }
+                    }
+                });
+            });
+
+            // 2. Botón Cerrar Sesión
+            document.getElementById('btn-logout-admin').addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+
+            // 3. Función para cargar la Tabla de Citas
+            function cargarTablaCitas() {
+                const cuerpoTabla = document.getElementById('tabla-citas-body');
+                const historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+                
+                cuerpoTabla.innerHTML = '';
+
+                if(historial.length === 0) {
+                    document.getElementById('mensaje-sin-citas').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('mensaje-sin-citas').style.display = 'none';
+                }
+
+                historial.forEach(cita => {
+                    const fila = `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding:10px;">${cita.dni}</td>
+                            <td style="padding:10px;">${cita.paciente}</td>
+                            <td style="padding:10px;">${cita.telefono}</td>
+                            <td style="padding:10px;">${cita.sede}</td>
+                            <td style="padding:10px;">${cita.especialidad}</td>
+                            <td style="padding:10px;">${cita.doctor}</td>
+                            <td style="padding:10px;">${cita.fecha} <br> <small>${cita.hora}</small></td>
+                            <td style="padding:10px;"><span style="background:#d4edda; color:#155724; padding:3px 8px; border-radius:10px; font-size:12px;">${cita.estado}</span></td>
+                        </tr>
+                    `;
+                    cuerpoTabla.innerHTML += fila;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

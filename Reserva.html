@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservar Cita - Clínica Mi Salud</title>
+  <link href="css/Css.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+  <header>
+    <img src="imagenes/logo.png" alt="Logo Clínica Mi Salud" class="logo">
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="Especialidades.html">Especialidades</a></li>
+        <li><a href="Servicios.html">Servicios</a></li>
+        <li><a href="Sedes.html">Sedes</a></li>
+        <li><a href="Contacto.html">Contacto</a></li>
+        <li id="nav-reserva"><a href="Reserva.html" class="activo">Reservar Cita</a></li>
+      </ul>
+    </nav>
+    <div id="user-area"></div>
+  </header>
+
+  <section class="contenedor reservar">
+    <h2>Reserva tu cita médica</h2>
+    
+    <div class="progress-bar">
+        <div class="step active" id="p-step1">1. Búsqueda</div>
+        <div class="step" id="p-step2">2. Horario</div>
+        <div class="step" id="p-step3">3. Confirmar</div>
+    </div>
+
+    <div id="step-1" class="form-step">
+        <p>Selecciona los datos para buscar disponibilidad.</p>
+        <form id="form-busqueda">
+            <label>Sede:</label>
+            <select id="res-sede">
+                <option value="">-- Selecciona Sede --</option>
+                <option value="Sede Central">Sede Central</option>
+                <option value="Sede Yanahuara">Sede Yanahuara</option>
+                <option value="Sede Paucarpata">Sede Paucarpata</option>
+            </select>
+
+            <label>Especialidad:</label>
+            <select id="res-especialidad">
+                <option value="">-- Cargando... --</option>
+            </select>
+
+            <label>Doctor (Opcional):</label>
+            <select id="res-doctor" disabled>
+                <option value="">-- Selecciona Especialidad primero --</option>
+            </select>
+
+            <label>Fecha:</label>
+            <input type="date" id="res-fecha">
+
+            <button type="button" class="btn" id="btn-buscar">Buscar Disponibilidad</button>
+        </form>
+    </div>
+
+    <div id="step-2" class="form-step hidden">
+        <button type="button" class="btn-back" onclick="changeStep(1)">← Volver</button>
+        <h3>Horarios Disponibles</h3>
+        <p>Selecciona una hora para el <span id="display-fecha" style="font-weight:bold;"></span></p>
+        
+        <div class="grid-horarios" id="lista-horarios"></div>
+    </div>
+
+    <div id="step-3" class="form-step hidden">
+        <button type="button" class="btn-back" onclick="changeStep(2)">← Volver a horarios</button>
+        <h3>Confirmar Reserva</h3>
+        <p>Estás reservando para: <strong><span id="resumen-cita"></span></strong></p>
+        
+        <form id="form-final">
+            <label>Nombre del Paciente:</label>
+            <input type="text" id="pac-nombre" placeholder="Nombre completo">
+            
+            <label>Teléfono de Contacto:</label>
+            <input type="tel" id="pac-telefono" placeholder="Ej: 987 654 321">
+            
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancelar</button>
+                <button type="button" class="btn" id="btn-confirmar">Confirmar Cita</button>
+            </div>
+        </form>
+    </div>
+
+  </section>
+
+  <div id="modal-exito" class="popup">
+      <div class="popup-contenido" style="text-align: center;">
+          <h3 style="color:green; font-size:30px;">¡Reserva Exitosa! ✅</h3>
+          <p>Tu cita ha sido registrada correctamente.</p>
+          <p>El administrador ya puede ver tu reserva en el sistema.</p>
+          <button class="btn" onclick="location.href='index.html'">Volver al Inicio</button>
+      </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Clínica Mi Salud | Todos los derechos reservados</p>
+  </footer>
+
+  <script src="js/dataloader.js"></script>
+  
+  <script>
+    /* --- LÓGICA DE RESERVA CORREGIDA --- */
+    document.addEventListener("DOMContentLoaded", () => {
+        inicializarDatos(); // 1. Asegurar que existan datos en memoria
+        loadSelects();      // 2. Cargar el select de especialidades
+        
+        // Pre-llenar nombre si hay usuario
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if(currentUser){
+            document.getElementById('pac-nombre').value = currentUser.nombre + " " + (currentUser.apellido || "");
+        }
+
+        // Eventos
+        document.getElementById("res-especialidad").addEventListener("change", filterDoctors);
+        document.getElementById("btn-buscar").addEventListener("click", goToStep2);
+        document.getElementById("btn-confirmar").addEventListener("click", finishBooking);
+    });
+
+    let selection = { sede: "", especialidad: "", doctor: "", fecha: "", hora: "" };
+
+    // --- FUNCIÓN CLAVE: REPARAR DATOS SI ESTÁN VACÍOS ---
+    function inicializarDatos() {
+        // A) Verificar Especialidades
+        let esp = JSON.parse(localStorage.getItem("especialidades"));
+        if (!esp || esp.length === 0) {
+            const defaultEsp = [
+                { id: "cardio", nombre: "Cardiología" },
+                { id: "pedia", nombre: "Pediatría" },
+                { id: "derma", nombre: "Dermatología" },
+                { id: "medi", nombre: "Medicina General" },
+                { id: "trauma", nombre: "Traumatología" }
+            ];
+            localStorage.setItem("especialidades", JSON.stringify(defaultEsp));
+        }
+
+        // B) Verificar Doctores (AQUÍ ESTABA EL PROBLEMA ANTES)
+        let docs = JSON.parse(localStorage.getItem("doctores"));
+        if (!docs || docs.length === 0) {
+            const defaultDocs = [
+                { nombre: "Juan Pérez", especialidadId: "cardio" },
+                { nombre: "Maria Gomez", especialidadId: "cardio" },
+                { nombre: "Luis Alcala", especialidadId: "pedia" },
+                { nombre: "Ana Torres", especialidadId: "derma" },
+                { nombre: "Carlos Ruiz", especialidadId: "medi" },
+                { nombre: "Pedro Soto", especialidadId: "trauma" }
+            ];
+            localStorage.setItem("doctores", JSON.stringify(defaultDocs));
+        }
+    }
+
+    // 1. Cargar Select de Especialidades
+    function loadSelects() {
+        const especialidades = JSON.parse(localStorage.getItem("especialidades"));
+        const selEsp = document.getElementById("res-especialidad");
+        
+        selEsp.innerHTML = '<option value="">-- Selecciona Especialidad --</option>';
+        especialidades.forEach(e => {
+            // Usamos el ID si existe, si no, usamos el nombre como ID temporal
+            const valor = e.id || e.nombre; 
+            const opt = document.createElement("option");
+            opt.value = valor; 
+            opt.textContent = e.nombre;
+            selEsp.appendChild(opt);
+        });
+    }
+
+    // 2. Filtrar Doctores (AHORA LEE DE LOCALSTORAGE)
+    function filterDoctors() {
+        const espId = document.getElementById("res-especialidad").value;
+        const selDoc = document.getElementById("res-doctor");
+        
+        // LEER SIEMPRE DE LA MEMORIA PARA VER LOS NUEVOS Y LOS VIEJOS
+        const todosLosDoctores = JSON.parse(localStorage.getItem("doctores") || "[]");
+
+        selDoc.innerHTML = '<option value="">-- Cualquiera --</option>';
+        selDoc.disabled = false;
+
+        if(!espId) {
+            selDoc.innerHTML = '<option value="">-- Selecciona Especialidad primero --</option>';
+            selDoc.disabled = true;
+            return;
+        }
+
+        // Filtramos: coincidencia por ID o por Nombre de la especialidad (para ser flexibles)
+        const docsFiltrados = todosLosDoctores.filter(d => {
+             // Compatibilidad: Algunos doctores pueden tener 'especialidadId' y otros (agregados manualmente) el nombre directo
+             return d.especialidadId == espId || d.especialidad == espId;
+        });
+        
+        if(docsFiltrados.length === 0) {
+             selDoc.innerHTML = '<option value="">No hay doctores para esta especialidad</option>';
+        } else {
+            docsFiltrados.forEach(d => {
+                const opt = document.createElement("option");
+                // Usamos nombre y apellido si existen
+                const nombreCompleto = d.nombre + (d.apellido ? " " + d.apellido : "");
+                opt.value = nombreCompleto;
+                opt.textContent = "Dr. " + nombreCompleto;
+                selDoc.appendChild(opt);
+            });
+        }
+    }
+
+    // 3. Pasos del Formulario
+    function goToStep2() {
+        const sede = document.getElementById("res-sede").value;
+        const esp = document.getElementById("res-especialidad");
+        const fecha = document.getElementById("res-fecha").value;
+
+        if(!sede || !esp.value || !fecha) {
+            alert("Por favor completa Sede, Especialidad y Fecha.");
+            return;
+        }
+
+        selection.sede = sede;
+        selection.especialidad = esp.options[esp.selectedIndex].text;
+        selection.doctor = document.getElementById("res-doctor").value || "Asignado por clínica";
+        selection.fecha = fecha;
+
+        document.getElementById("display-fecha").textContent = fecha;
+        generateHours();
+        changeStep(2);
+    }
+
+    function generateHours() {
+        const container = document.getElementById("lista-horarios");
+        container.innerHTML = "";
+        const horas = ["08:00 a.m.", "09:30 a.m.", "11:00 a.m.", "02:00 p.m.", "03:30 p.m.", "05:00 p.m."];
+
+        horas.forEach(h => {
+            const btn = document.createElement("button");
+            btn.className = "hora-btn";
+            btn.style.margin = "5px";
+            btn.style.padding = "10px";
+            btn.style.cursor = "pointer";
+            btn.textContent = h;
+            btn.onclick = () => {
+                selection.hora = h;
+                goToStep3();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function goToStep3() {
+        const resumen = `${selection.especialidad} con ${selection.doctor} - ${selection.hora}`;
+        document.getElementById("resumen-cita").textContent = resumen;
+        changeStep(3);
+    }
+
+    // 4. FINALIZAR Y GUARDAR
+    function finishBooking() {
+        const nombreInput = document.getElementById("pac-nombre").value;
+        const telInput = document.getElementById("pac-telefono").value;
+
+        if(!nombreInput || !telInput) {
+            alert("Necesitamos tus datos de contacto.");
+            return;
+        }
+
+        const usuarioLogueado = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if(!usuarioLogueado){
+            alert("Por favor inicia sesión para reservar.");
+            return;
+        }
+
+        const nuevaCita = {
+            id: Date.now(),
+            dni: usuarioLogueado.dni || "No registrado",
+            paciente: nombreInput,
+            telefono: telInput,
+            sede: selection.sede,
+            especialidad: selection.especialidad,
+            doctor: selection.doctor,
+            fecha: selection.fecha,
+            hora: selection.hora,
+            estado: "Confirmada"
+        };
+
+        let historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+        historial.push(nuevaCita);
+        localStorage.setItem('historialCitas', JSON.stringify(historial));
+        
+        document.getElementById("modal-exito").classList.add("open");
+    }
+
+    function changeStep(stepNum) {
+        document.querySelectorAll(".form-step").forEach(div => div.classList.add("hidden"));
+        document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+        document.getElementById(`step-${stepNum}`).classList.remove("hidden");
+        document.getElementById(`p-step${stepNum}`).classList.add("active");
+    }
+  </script>
+</body>
+</html>
