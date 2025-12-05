@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto - Clínica Mi Salud</title>
+  <link href="css/Css.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <img src="imagenes/logo.png" alt="Logo Clínica Mi Salud" class="logo" />
+    
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="Especialidades.html">Especialidades</a></li>
+        <li><a href="Servicios.html">Servicios</a></li>
+        <li><a href="Sedes.html">Sedes</a></li>
+        <li><a href="Contacto.html" class="activo">Contacto</a></li> 
+        <li id="nav-reserva" style="display: none;"><a href="Reserva.html">Reservar Cita</a></li>
+      </ul>
+    </nav>
+
+    <div id="user-area"></div>
+  </header>
+
+  <section class="contenedor contacto">
+    <h2>Contáctanos</h2>
+    <p>¿Tienes consultas o dudas? Contáctanos con gusto responderemos lo más pronto posible.</p>
+    <form class="formulario">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Tu nombre" required />
+
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" id="correo" placeholder="tuemail@ejemplo.com" required />
+
+      <label for="mensaje">Mensaje:</label>
+      <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..." required></textarea>
+
+      <button type="submit" class="btn">Enviar</button>
+    </form>
+
+    <div class="info-contacto">
+      <p><strong>Dirección central:</strong> Av. Principal 123, Arequipa</p>
+      <p><strong>Teléfono:</strong> (054) 456-789</p>
+      <p><strong>Email:</strong> contacto@clinicamisalud.com</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Clínica Mi Salud | Todos los derechos reservados</p>
+  </footer>
+
+  <div id="modal-login" class="popup">
+    <div class="popup-contenido" style="max-width: 380px; text-align: center;">
+        <span class="close-modal" style="float:right; cursor:pointer; font-size:28px; color:#333; position:relative; z-index:10;">&times;</span>
+        <div style="background: #e3f2fd; width: 60px; height: 60px; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 15px auto;">
+            <i class="fas fa-user-circle" style="font-size: 30px; color: var(--primary);"></i>
+        </div>
+        <h2 style="margin-top:0; color: var(--primary);">Bienvenido</h2>
+        <p style="color:#666; font-size:14px; margin-bottom:20px;">Ingresa tus credenciales</p>
+        <div class="input-group"><i class="fas fa-user input-icon"></i><input id="login-usuario" placeholder="Usuario"></div>
+        <div class="input-group"><i class="fas fa-lock input-icon"></i><input id="login-password" type="password" placeholder="Contraseña"></div>
+        <div id="login-msg"></div> 
+        <button class="btn btn-gradient" id="btn-login">INGRESAR</button>
+        <div class="separator">o</div>
+        <button class="btn btn-outline" id="btn-login-admin">Soy Administrador</button>
+        <div style="margin-top:20px;"><small>¿No tienes cuenta? <a href="#" onclick="switchModal('register')" class="link-action">Regístrate gratis</a></small></div>
+    </div>
+  </div>
+
+  <div id="modal-register" class="popup">
+    <div class="popup-contenido" style="max-width: 450px; text-align: center;">
+        <span class="close-modal" style="float:right; cursor:pointer; font-size:28px; color:#333; position:relative; z-index:10;">&times;</span>
+        <div style="background: #e3f2fd; width: 60px; height: 60px; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 15px auto;">
+            <i class="fas fa-user-plus" style="font-size: 28px; color: var(--primary);"></i>
+        </div>
+        <h2 style="margin-top:0; color: var(--primary);">Crear Cuenta</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="input-group"><i class="fas fa-id-card input-icon"></i><input id="reg-dni" placeholder="DNI (8 dígitos)" maxlength="8"></div>
+            <div class="input-group"><i class="fas fa-user input-icon"></i><input id="reg-usuario" placeholder="Usuario"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="input-group"><i class="fas fa-id-badge input-icon"></i><input id="reg-nombre" placeholder="Nombre"></div>
+            <div class="input-group"><i class="fas fa-id-badge input-icon"></i><input id="reg-apellido" placeholder="Apellido"></div>
+        </div>
+        <div class="input-group"><i class="fas fa-lock input-icon"></i><input id="reg-password" type="password" placeholder="Contraseña"></div>
+        <div class="input-group"><i class="fas fa-lock input-icon"></i><input id="reg-password2" type="password" placeholder="Repetir Contraseña"></div>
+        <div class="checkbox-wrapper"><input type="checkbox" id="reg-is-admin"><label for="reg-is-admin" style="cursor:pointer;">Crear como Administrador</label></div>
+        <div id="admin-code-container" class="input-group" style="display:none; background:#f0f8ff; border: 1px dashed #0077b6;">
+            <i class="fas fa-key input-icon" style="color:#0077b6;"></i><input id="reg-admin-code" type="password" placeholder="Clave Maestra (Ej: CLINICA2025)" style="background:transparent; border:none;">
+        </div>
+        <div id="register-msg"></div> 
+        <button class="btn btn-gradient" id="btn-registrar">CREAR CUENTA</button>
+        <div style="margin-top:20px;"><small>¿Ya tienes cuenta? <a href="#" onclick="switchModal('login')" class="link-action">Inicia sesión</a></small></div>
+    </div>
+  </div>
+
+  <script src="js/dataloader.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

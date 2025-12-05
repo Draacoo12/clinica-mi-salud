@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Administración - Panel</title>
+  <link rel="stylesheet" href="css/Css.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      /* Estilos extra para los filtros */
+      .filtros-container {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+          background: #f8f9fa;
+          padding: 15px;
+          border-radius: 10px;
+          border: 1px solid #eee;
+      }
+      .filtro-group {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-width: 200px;
+      }
+      .filtro-group label {
+          font-size: 12px;
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: #555;
+      }
+      .filtro-group select {
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          width: 100%;
+          margin-bottom: 0; /* Quitar margen por defecto del css global */
+      }
+  </style>
+</head>
+<body>
+  <header>
+      <h1 style="margin:0; font-size: 24px;">Panel de Administración</h1>
+      <div style="display:flex; align-items:center; gap:15px;">
+        <span id="admin-user-label" style="font-weight:bold;">Admin</span>
+        <button id="btn-logout-admin" class="btn" style="background:rgba(255,255,255,0.2); border:1px solid white;">Cerrar sesión</button>
+      </div>
+  </header>
+
+  <main class="admin-wrap">
+    <div class="admin-header">
+      <div class="admin-nav">
+        <button data-section="dashboard" class="btn btn-secondary">Dashboard</button>
+        <button data-section="citas" class="btn btn-secondary">Citas Médicas</button>
+        <button data-section="especialidades" class="btn btn-secondary">Especialidades</button>
+        <button data-section="doctores" class="btn btn-secondary">Doctores</button>
+        <button data-section="contacto" class="btn btn-secondary">Contacto</button>
+      </div>
+    </div>
+
+    <div class="admin-sections">
+      <section id="section-dashboard">
+        <h2>Resumen</h2>
+        <p id="resumen-info">Bienvenido al panel de control.</p>
+      </section>
+
+      <section id="section-citas" class="hidden">
+        <h2>Historial de Citas Médicas</h2>
+        
+        <div class="filtros-container">
+            <div class="filtro-group">
+                <label><i class="fas fa-hospital"></i> Filtrar por Sede:</label>
+                <select id="filtro-sede"><option value="">Todas las Sedes</option></select>
+            </div>
+            <div class="filtro-group">
+                <label><i class="fas fa-stethoscope"></i> Filtrar por Especialidad:</label>
+                <select id="filtro-esp"><option value="">Todas las Especialidades</option></select>
+            </div>
+            <div class="filtro-group">
+                <label><i class="fas fa-user-md"></i> Filtrar por Doctor:</label>
+                <select id="filtro-doc"><option value="">Todos los Doctores</option></select>
+            </div>
+            <div class="filtro-group" style="justify-content: flex-end;">
+                <button id="btn-limpiar-filtros" class="btn btn-secondary" style="padding: 8px;">Limpiar Filtros</button>
+            </div>
+        </div>
+
+        <div class="contenedor-tabla" style="overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background:#0099cc; color:white; text-align:left;">
+                        <th style="padding:12px;">DNI</th>
+                        <th style="padding:12px;">Paciente</th>
+                        <th style="padding:12px;">Teléfono</th>
+                        <th style="padding:12px;">Sede</th>
+                        <th style="padding:12px;">Especialidad</th>
+                        <th style="padding:12px;">Doctor</th>
+                        <th style="padding:12px;">Fecha/Hora</th>
+                        <th style="padding:12px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-citas-body">
+                    </tbody>
+            </table>
+            <p id="mensaje-sin-citas" style="text-align:center; padding:20px; display:none;">No se encontraron citas con esos filtros.</p>
+        </div>
+      </section>
+
+      <section id="section-especialidades" class="hidden">
+        <h2>Gestión de Especialidades</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Agregar Especialidad</h3>
+            <div class="form-group"><label>Nombre</label><input id="esp-nombre" /></div>
+            <div class="form-group"><label>Descripción</label><input id="esp-desc" /></div>
+            <div class="form-group"><label>Imagen</label><input type="file" id="esp-img" accept="image/*" /></div>
+            <div class="form-group center"><button id="btn-add-esp" class="btn btn-primary">Guardar</button></div>
+          </div>
+          <div><h3>Listado</h3><div id="especialidades-list">Cargando...</div></div>
+        </div>
+      </section>
+
+      <section id="section-doctores" class="hidden">
+        <h2>Gestión de Doctores</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Agregar Doctor</h3>
+            <div class="form-group"><label>Nombre</label><input id="doc-nombre" /></div>
+            <div class="form-group"><label>Apellido</label><input id="doc-apellido" /></div>
+            <div class="form-group"><label>Especialidad</label><select id="doc-especialidad"></select></div>
+            <div class="form-group"><label>Fotografía</label><input type="file" id="doc-img" accept="image/*" /></div>
+            <div class="form-group center"><button id="btn-add-doc" class="btn btn-primary">Guardar Doctor</button></div>
+          </div>
+          <div><h3>Listado</h3><div id="doctores-list">Cargando...</div></div>
+        </div>
+      </section>
+
+      <section id="section-contacto" class="hidden">
+        <h2>Información de Contacto</h2>
+        <div class="form-group"><label>Dirección</label><input id="con-direccion" /></div>
+        <div class="form-group"><label>Teléfono</label><input id="con-telefono" /></div>
+        <div class="form-group"><label>Correo</label><input id="con-correo" /></div>
+        <div class="form-group center"><button id="btn-save-contacto" class="btn btn-primary">Actualizar</button></div>
+      </section>
+    </div>
+  </main>
+    
+    <script src="js/dataloader.js"></script>
+    <script src="js/admin.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Navegación
+            const secciones = document.querySelectorAll('.admin-sections section');
+            document.querySelectorAll('.admin-nav button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const seccionId = 'section-' + btn.getAttribute('data-section');
+                    secciones.forEach(s => s.classList.add('hidden'));
+                    
+                    const seccionActiva = document.getElementById(seccionId);
+                    if(seccionActiva) {
+                        seccionActiva.classList.remove('hidden');
+                        // Al entrar a citas, cargar filtros y tabla
+                        if(seccionId === 'section-citas') {
+                            llenarOpcionesFiltros();
+                            cargarTablaCitas();
+                        }
+                    }
+                });
+            });
+
+            // 2. Cerrar Sesión
+            document.getElementById('btn-logout-admin').addEventListener('click', () => {
+                if(confirm("¿Cerrar sesión?")){
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // 3. LISTENERS PARA FILTROS (Recargan la tabla al cambiar)
+            const fSede = document.getElementById('filtro-sede');
+            const fEsp = document.getElementById('filtro-esp');
+            const fDoc = document.getElementById('filtro-doc');
+            const btnLimpiar = document.getElementById('btn-limpiar-filtros');
+
+            fSede.addEventListener('change', cargarTablaCitas);
+            fEsp.addEventListener('change', cargarTablaCitas);
+            fDoc.addEventListener('change', cargarTablaCitas);
+
+            btnLimpiar.addEventListener('click', () => {
+                fSede.value = "";
+                fEsp.value = "";
+                fDoc.value = "";
+                cargarTablaCitas();
+            });
+
+            // 4. FUNCION PARA LLENAR LOS SELECTS AUTOMÁTICAMENTE
+            function llenarOpcionesFiltros() {
+                const historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+                
+                // Obtener valores únicos usando Set
+                const sedes = [...new Set(historial.map(c => c.sede))];
+                const especialidades = [...new Set(historial.map(c => c.especialidad))];
+                const doctores = [...new Set(historial.map(c => c.doctor))];
+
+                // Función auxiliar para llenar un select
+                const llenarSelect = (select, datos) => {
+                    const valorActual = select.value; // Guardar selección actual
+                    // Mantener la primera opción (Todas...)
+                    select.innerHTML = select.options[0].outerHTML; 
+                    
+                    datos.forEach(d => {
+                        if(d) { // Evitar nulos
+                            const opt = document.createElement('option');
+                            opt.value = d;
+                            opt.textContent = d;
+                            select.appendChild(opt);
+                        }
+                    });
+                    select.value = valorActual; // Restaurar selección
+                };
+
+                llenarSelect(fSede, sedes);
+                llenarSelect(fEsp, especialidades);
+                llenarSelect(fDoc, doctores);
+            }
+
+            // 5. CARGAR TABLA CON FILTRADO
+            function cargarTablaCitas() {
+                const cuerpoTabla = document.getElementById('tabla-citas-body');
+                const historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+                
+                // Obtener valores de los filtros
+                const valSede = fSede.value;
+                const valEsp = fEsp.value;
+                const valDoc = fDoc.value;
+
+                cuerpoTabla.innerHTML = '';
+
+                // FILTRAR DATOS
+                const datosFiltrados = historial.filter(c => {
+                    return (valSede === "" || c.sede === valSede) &&
+                           (valEsp === "" || c.especialidad === valEsp) &&
+                           (valDoc === "" || c.doctor === valDoc);
+                });
+
+                if(datosFiltrados.length === 0) {
+                    document.getElementById('mensaje-sin-citas').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('mensaje-sin-citas').style.display = 'none';
+                }
+
+                // Invertir para ver recientes primero
+                datosFiltrados.slice().reverse().forEach(cita => {
+                    let bgColor = '#d4edda'; // Verde
+                    let textColor = '#155724';
+                    
+                    if(cita.estado === 'Cancelada'){
+                        bgColor = '#f8d7da'; // Rojo
+                        textColor = '#721c24';
+                    }
+
+                    const fila = `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding:10px;">${cita.dni}</td>
+                            <td style="padding:10px;">${cita.paciente}</td>
+                            <td style="padding:10px;">${cita.telefono}</td>
+                            <td style="padding:10px;">${cita.sede}</td>
+                            <td style="padding:10px;">${cita.especialidad}</td>
+                            <td style="padding:10px;">${cita.doctor}</td>
+                            <td style="padding:10px;">${cita.fecha} <br> <small>${cita.hora}</small></td>
+                            <td style="padding:10px;">
+                                <span style="background:${bgColor}; color:${textColor}; padding:4px 10px; border-radius:15px; font-size:12px; font-weight:bold;">
+                                    ${cita.estado}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    cuerpoTabla.innerHTML += fila;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

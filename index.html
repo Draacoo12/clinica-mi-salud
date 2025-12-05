@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clínica Mi Salud - Inicio</title>
+  <link href="css/Css.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="inicio">
+
+  <header>
+    <img src="imagenes/logo.png" alt="Logo Clínica Mi Salud" class="logo" />
+    <nav>
+      <ul>
+        <li><a href="index.html" class="activo">Inicio</a></li>
+        <li><a href="Especialidades.html">Especialidades</a></li>
+        <li><a href="Servicios.html">Servicios</a></li>
+        <li><a href="Sedes.html">Sedes</a></li>
+        <li><a href="Contacto.html">Contacto</a></li>
+        <li id="nav-reserva" style="display: none;"><a href="Reserva.html">Reservar Cita</a></li>
+      </ul>
+    </nav>
+    <div id="user-area"></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-texto">
+      <h2>Tu salud, nuestro compromiso</h2>
+      <p>Servicios médicos de calidad, atención personalizada y tecnología avanzada para ti.</p>
+      <a href="Contacto.html" class="boton">Solicita tu cita</a>
+    </div>
+  </section>
+
+  <section class="contenedor bienvenida" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 50px; align-items: center;">
+    <div class="texto-bienvenida">
+        <h2 style="text-align: left; margin-bottom: 20px;">Bienvenido a <span style="color:var(--secondary)">Clínica Mi Salud</span></h2>
+        <p style="font-size: 1.1rem; color: #555; margin-bottom: 15px;">
+            Somos un centro médico comprometido con tu bienestar. Contamos con más de 20 años de experiencia cuidando la salud de las familias peruanas.
+        </p>
+        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+            <li style="margin-bottom: 10px; font-size: 15px;"><i class="fas fa-check-circle" style="color:var(--secondary); margin-right:10px;"></i> Atención de Emergencia 24/7</li>
+            <li style="margin-bottom: 10px; font-size: 15px;"><i class="fas fa-check-circle" style="color:var(--secondary); margin-right:10px;"></i> Staff médico certificado</li>
+            <li style="margin-bottom: 10px; font-size: 15px;"><i class="fas fa-check-circle" style="color:var(--secondary); margin-right:10px;"></i> Infraestructura moderna</li>
+        </ul>
+        <a href="Sedes.html" class="btn">Conoce nuestras sedes</a>
+    </div>
+    <div class="imagen-bienvenida">
+        <img src="imagenes/equipo_medico.jpg" alt="Nuestro Equipo Profesional" style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" onerror="this.src='https://via.placeholder.com/600x400?text=Coloca+equipo_medico.jpg+en+imagenes'">
+    </div>
+  </section>
+
+  <section class="contenedor destacados">
+    <h2>¿Por qué elegirnos?</h2>
+    <p style="text-align:center; max-width: 600px; margin: 0 auto 40px auto; color: #666;">Brindamos soluciones integrales de salud enfocadas en la prevención.</p>
+    
+    <div class="grid-destacados">
+      <div class="card hover-effect">
+        <div class="icono-box"><i class="fas fa-user-md"></i></div>
+        <h3>Especialistas Expertos</h3>
+        <p>Médicos de primer nivel en cardiología, pediatría y más.</p>
+      </div>
+      <div class="card hover-effect">
+        <div class="icono-box"><i class="fas fa-microscope"></i></div>
+        <h3>Tecnología Avanzada</h3>
+        <p>Equipos de última generación para diagnósticos precisos.</p>
+      </div>
+      <div class="card hover-effect">
+        <div class="icono-box"><i class="fas fa-laptop-medical"></i></div>
+        <h3>Citas en Línea</h3>
+        <p>Reserva tu cita en segundos desde nuestra plataforma web.</p>
+      </div>
+      <div class="card hover-effect">
+        <div class="icono-box"><i class="fas fa-heartbeat"></i></div>
+        <h3>Atención Integral</h3>
+        <p>Seguimiento continuo para garantizar tu recuperación total.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background-color: #001d3d; color: white; padding: 60px 0 20px 0; margin-top: auto;">
+      <div class="contenedor" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
+          <div>
+              <h3 style="color:white; margin-bottom:20px;">Clínica Mi Salud</h3>
+              <p style="color: #ccc; font-size: 14px; line-height: 1.6;">Tu salud es nuestra prioridad número uno.</p>
+              <div style="margin-top: 20px;">
+                  <i class="fab fa-facebook" style="font-size: 20px; margin-right: 15px; color:#ccc;"></i>
+                  <i class="fab fa-instagram" style="font-size: 20px; margin-right: 15px; color:#ccc;"></i>
+                  <i class="fab fa-twitter" style="font-size: 20px; color:#ccc;"></i>
+              </div>
+          </div>
+          <div>
+              <h3 style="color:white; margin-bottom:20px;">Enlaces Rápidos</h3>
+              <ul style="list-style: none; padding: 0;">
+                  <li style="margin-bottom:10px;"><a href="index.html" style="color:#ccc; text-decoration:none;">Inicio</a></li>
+                  <li style="margin-bottom:10px;"><a href="Especialidades.html" style="color:#ccc; text-decoration:none;">Especialidades</a></li>
+                  <li style="margin-bottom:10px;"><a href="Reserva.html" style="color:#ccc; text-decoration:none;">Reservar Cita</a></li>
+                  <li style="margin-bottom:10px;"><a href="#" onclick="openModal('login'); return false;" style="color:#ccc; text-decoration:none;">Acceso Pacientes</a></li>
+              </ul>
+          </div>
+          <div>
+              <h3 style="color:white; margin-bottom:20px;">Contacto</h3>
+              <p style="color:#ccc; margin-bottom:10px;"><i class="fas fa-map-marker-alt" style="margin-right:10px;"></i> Av. Principal 123, Arequipa</p>
+              <p style="color:#ccc;"><i class="fas fa-envelope" style="margin-right:10px;"></i> info@misalud.com</p>
+          </div>
+      </div>
+      <div style="text-align: center; border-top: 1px solid #333; padding-top: 20px;">
+          <p style="font-size: 13px; color: #888;">© 2025 Clínica Mi Salud | Todos los derechos reservados</p>
+      </div>
+  </footer>
+
+  <div id="modal-login" class="popup">
+    <div class="popup-contenido" style="max-width: 380px; text-align: center;">
+        <span class="close-modal" style="float:right; cursor:pointer; font-size:28px; color:#333; position:relative; z-index:10;">&times;</span>
+        
+        <div style="background: #e3f2fd; width: 60px; height: 60px; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 15px auto;">
+            <i class="fas fa-user-circle" style="font-size: 30px; color: var(--primary);"></i>
+        </div>
+
+        <h2 style="margin-top:0; color: var(--primary);">Bienvenido</h2>
+        <p style="color:#666; font-size:14px; margin-bottom:20px;">Ingresa tus credenciales</p>
+        
+        <div class="input-group">
+            <i class="fas fa-user input-icon"></i>
+            <input id="login-usuario" placeholder="Usuario">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input id="login-password" type="password" placeholder="Contraseña">
+        </div>
+        
+        <div id="login-msg"></div> 
+        
+        <button class="btn btn-gradient" id="btn-login">INGRESAR</button>
+        <div class="separator">o</div>
+        <button class="btn btn-outline" id="btn-login-admin">Soy Administrador</button>
+        
+        <div style="margin-top:20px;">
+            <small>¿No tienes cuenta? <a href="#" onclick="switchModal('register')" class="link-action">Regístrate gratis</a></small>
+        </div>
+    </div>
+  </div>
+
+  <div id="modal-register" class="popup">
+    <div class="popup-contenido" style="max-width: 450px; text-align: center;">
+        <span class="close-modal" style="float:right; cursor:pointer; font-size:28px; color:#333; position:relative; z-index:10;">&times;</span>
+        
+        <div style="background: #e3f2fd; width: 60px; height: 60px; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 15px auto;">
+            <i class="fas fa-user-plus" style="font-size: 28px; color: var(--primary);"></i>
+        </div>
+
+        <h2 style="margin-top:0; color: var(--primary);">Crear Cuenta</h2>
+<div class="input-group">
+    <i class="fas fa-id-card input-icon"></i>
+    <input id="reg-dni" type="text" placeholder="DNI (8 dígitos)" maxlength="8">
+</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="input-group">
+                <i class="fas fa-id-card input-icon"></i>
+                <input id="reg-nombre" placeholder="Nombre">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-id-card input-icon"></i>
+                <input id="reg-apellido" placeholder="Apellido">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-user input-icon"></i>
+            <input id="reg-usuario" placeholder="Crea un usuario">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input id="reg-password" type="password" placeholder="Contraseña">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input id="reg-password2" type="password" placeholder="Repetir Contraseña">
+        </div>
+        
+        <div class="checkbox-wrapper"> 
+            <input type="checkbox" id="reg-is-admin"> 
+            <label for="reg-is-admin" style="cursor:pointer;">Crear como Administrador</label>
+        </div>
+
+        <div id="admin-code-container" class="input-group" style="display:none; background:#f0f8ff; border: 1px dashed #0077b6;">
+            <i class="fas fa-key input-icon" style="color:#0077b6;"></i>
+            <input id="reg-admin-code" type="password" placeholder="Clave Maestra (Ej: CLINICA2025)" style="background:transparent; border:none;">
+        </div>
+
+        <div id="register-msg"></div> 
+        <button class="btn btn-gradient" id="btn-registrar">CREAR CUENTA</button>
+
+        <div style="margin-top:20px;">
+            <small>¿Ya tienes cuenta? <a href="#" onclick="switchModal('login')" class="link-action">Inicia sesión</a></small>
+        </div>
+    </div>
+  </div>
+
+  <script src="JS/dataloader.js"></script>
+  <script src="JS/login.js"></script>
+
+<div id="cookie-banner" class="cookie-container">
+    <div class="cookie-content">
+        <i class="fas fa-cookie-bite" style="font-size: 30px; color: #FFD700;"></i>
+        <p>
+            Utilizamos cookies propias y de terceros para mejorar nuestros servicios y mostrarle publicidad relacionada con sus preferencias. 
+            <br><span style="font-size:12px; opacity:0.8;">Si continúas navegando, consideramos que aceptas su uso.</span>
+        </p>
+    </div>
+    <div class="cookie-buttons">
+        <button id="btn-accept-cookies" class="btn-cookie accept">Aceptar todo</button>
+        <button onclick="document.getElementById('cookie-banner').style.display='none'" class="btn-cookie cancel">Rechazar</button>
+    </div>
+</div>
+</body>
+</html>

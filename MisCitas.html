@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Citas - Clínica Mi Salud</title>
+  <link href="css/Css.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <img src="imagenes/logo.png" alt="Logo Clínica Mi Salud" class="logo"/>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="Especialidades.html">Especialidades</a></li>
+        <li><a href="Servicios.html">Servicios</a></li>
+        <li><a href="Sedes.html">Sedes</a></li>
+        <li><a href="Contacto.html">Contacto</a></li>
+        <li id="nav-reserva"><a href="Reserva.html">Reservar Cita</a></li>
+      </ul>
+    </nav>
+    <div id="user-area"></div>
+  </header>
+
+  <section class="contenedor">
+    <h2>Mis Citas Médicas</h2>
+    <p style="text-align: center;">Aquí puedes ver el estado de tus citas y cancelarlas si es necesario.</p>
+
+    <div class="contenedor-tabla" style="overflow-x:auto; margin-top: 20px;">
+        <table style="width:100%; border-collapse: collapse; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+            <thead>
+                <tr style="background:var(--primary); color:white; text-align:left;">
+                    <th style="padding:15px;">Fecha</th>
+                    <th style="padding:15px;">Hora</th>
+                    <th style="padding:15px;">Especialidad</th>
+                    <th style="padding:15px;">Doctor</th>
+                    <th style="padding:15px;">Sede</th>
+                    <th style="padding:15px;">Estado</th>
+                    <th style="padding:15px;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-mis-citas">
+                </tbody>
+        </table>
+        <p id="msg-vacio" style="text-align:center; padding:20px; display:none;">No tienes citas agendadas.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Clínica Mi Salud | Todos los derechos reservados</p>
+  </footer>
+
+  <script src="js/dataloader.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioLogueado = JSON.parse(localStorage.getItem('currentUser'));
+
+        // Si no hay usuario, mandar al inicio
+        if (!usuarioLogueado) {
+            alert("Debes iniciar sesión para ver tus citas.");
+            window.location.href = "index.html";
+            return;
+        }
+
+        renderizarMisCitas(usuarioLogueado.dni);
+    });
+
+    function renderizarMisCitas(dniUsuario) {
+        const cuerpoTabla = document.getElementById('tabla-mis-citas');
+        const historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+        
+        // FILTRAR: Solo mostrar las citas que coincidan con el DNI del usuario conectado
+        const misCitas = historial.filter(cita => cita.dni === dniUsuario);
+
+        cuerpoTabla.innerHTML = '';
+
+        if (misCitas.length === 0) {
+            document.getElementById('msg-vacio').style.display = 'block';
+            return;
+        }
+
+        // Ordenar: Las más recientes primero (opcional, por ID que es la fecha)
+        misCitas.reverse(); 
+
+        misCitas.forEach(cita => {
+            // Definir color del estado
+            let colorEstado = "#28a745"; // Verde (Confirmada)
+            if(cita.estado === "Cancelada") colorEstado = "#dc3545"; // Rojo
+
+            // Botón cancelar: Solo aparece si NO está cancelada
+            let botonCancelar = '';
+            if(cita.estado !== "Cancelada") {
+                botonCancelar = `<button onclick="cancelarCita(${cita.id})" style="background:#dc3545; padding:5px 10px; font-size:12px;">Cancelar</button>`;
+            } else {
+                botonCancelar = `<span style="color:#aaa;">--</span>`;
+            }
+
+            const fila = `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding:12px;">${cita.fecha}</td>
+                    <td style="padding:12px;">${cita.hora}</td>
+                    <td style="padding:12px;">${cita.especialidad}</td>
+                    <td style="padding:12px;">${cita.doctor}</td>
+                    <td style="padding:12px;">${cita.sede}</td>
+                    <td style="padding:12px;"><span style="color:${colorEstado}; font-weight:bold;">${cita.estado}</span></td>
+                    <td style="padding:12px;">${botonCancelar}</td>
+                </tr>
+            `;
+            cuerpoTabla.innerHTML += fila;
+        });
+    }
+
+    // FUNCIÓN PARA CANCELAR
+    window.cancelarCita = function(idCita) {
+        if(!confirm("¿Estás seguro de que deseas cancelar esta cita?")) return;
+
+        // 1. Obtener todas las citas
+        let historial = JSON.parse(localStorage.getItem('historialCitas')) || [];
+
+        // 2. Buscar y actualizar la cita específica
+        const indice = historial.findIndex(c => c.id === idCita);
+        if(indice !== -1) {
+            historial[indice].estado = "Cancelada";
+            
+            // 3. Guardar cambios en localStorage
+            localStorage.setItem('historialCitas', JSON.stringify(historial));
+            
+            // 4. Recargar tabla
+            const usuario = JSON.parse(localStorage.getItem('currentUser'));
+            renderizarMisCitas(usuario.dni);
+            alert("Cita cancelada correctamente.");
+        }
+    }
+  </script>
+</body>
+</html>
